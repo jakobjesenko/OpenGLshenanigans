@@ -22,6 +22,7 @@ unsigned int FrameCount = 0;
 
 float CubeRotation = 0;
 clock_t LastTime = 0;
+float CubeSpeed = 1.0f;
 
 GLuint
 	ProjectionMatrixUniformLocation,
@@ -45,6 +46,7 @@ void IdleFunction(void);
 void CreateCube(void);
 void DestroyCube(void);
 void DrawCube(void);
+void mouse(int, int, int, int);
 
 int main(int argc, char* argv[]){
 	Initialize(argc, argv);
@@ -123,6 +125,7 @@ void InitWindow(int argc, char* argv[]){
 	glutIdleFunc(IdleFunction);
 	glutTimerFunc(0, TimerFunction, 0);
 	glutCloseFunc(DestroyCube);
+	glutMouseFunc(mouse);
 }
 
 void ResizeFunction(int Width, int Height){
@@ -258,7 +261,7 @@ void DrawCube(void){
 	if (LastTime == 0){
 		LastTime = Now;
 	}
-	CubeRotation += 45.0f * ((float)(Now - LastTime) / CLOCKS_PER_SEC);
+	CubeRotation += CubeSpeed * 45.0f * ((float)(Now - LastTime) / CLOCKS_PER_SEC);
 	CubeAngle = DegreesToRadians(CubeRotation);
 	LastTime = Now;
 
@@ -281,4 +284,12 @@ void DrawCube(void){
 
 	glBindVertexArray(0);
 	glUseProgram(0);
+}
+
+void mouse(int button, int state, int x, int y){
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
+		CubeSpeed = 0.0f;
+	} else {
+		CubeSpeed = 1.0f;
+	}
 }
